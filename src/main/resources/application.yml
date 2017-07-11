@@ -1,0 +1,54 @@
+---
+# Spring Configuration
+spring:
+  application:
+    name: @project.name@
+
+# Logging & Tomcat
+logging.config: "classpath:log4j-spring.xml"
+
+server:
+  tomcat:
+    basedir: ${application.home}
+    max-threads: 1
+    access-log-enabled: true
+    access-log-pattern: "%t lbip=%h identd=%l user=%u status=%s method=%m url=%U bytes=%b duration=%D"
+
+# Monitoring
+monitoringAgent:
+  application:
+    name: ${spring.application.name}
+    append:
+      process:
+        id: false
+  configuration:
+    disable:
+      default: false
+    urls: "classpath:platform/monitoring/yammer.xml,classpath:environment/metrics.xml"
+  statsd:
+    hostname: "statsd"
+    port: 8125
+
+# Spring Actuator Endpoints
+endpoints:
+  enabled: false
+  metrics:
+    enabled: true
+
+# Swagger Documentation
+swagger:
+  service:
+    version: "1.0.0"
+    title: ${spring.application.name}
+    description: "A service that provides APIs for ..."
+    termsPath: ""
+    contact:
+      name: ""
+      email: "team@expedia.com"
+      url: "https://confluence.sea.corp.expecn.com/"
+    licencePath: "#"
+    licenceType: ""
+
+# Additional Config
+test:
+  helloMsg: "Hello there"

@@ -1,0 +1,27 @@
+{
+  "global": {
+    "app_type": "springboot",
+    "app_variant": "default",
+    "isactive_support": {
+      "enabled": true,
+      "file": "/opt/vacation-planner/active.txt"
+    },
+    "app_name": "vacation-planner",
+    "source_repo": "git@ewegithub.sb.karmalab.net:EWE/vacation-planner.git",
+    "team": "EWE Packages",
+    "department": "Exp Eng Mgmt US",
+    "cost_center": "10241",
+    "portfolio": "Local Expert",
+    "product_area": "LX Shopping",
+    "notify": {
+      "email": {
+        "addresses": [
+          "amahalingam@expedia.com"
+        ]
+      },
+      "hipchat": {
+        "room": "vacation-planner"
+      }
+    }
+  }
+}

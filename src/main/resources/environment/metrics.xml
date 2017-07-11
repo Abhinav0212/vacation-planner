@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monitor>
+    <publishList>
+    	<!-- JDK Metrics -->
+
+        <publish name="java.lang:type=*,*">
+            <delay>30</delay>
+            <unit>SECONDS</unit>
+            <include>
+                <metric                         type="Memory"     attribute="HeapMemoryUsage"    compositeEntry="used" isCounter="false" />
+                <metric                         type="Memory"     attribute="HeapMemoryUsage"    compositeEntry="max"  isCounter="false" />
+                <metric                         type="Memory"     attribute="NonHeapMemoryUsage" compositeEntry="used" isCounter="false" />
+                <metric                         type="Memory"     attribute="NonHeapMemoryUsage" compositeEntry="max"  isCounter="false" />
+
+                <metric name="Code Cache"       type="MemoryPool" attribute="Usage"   compositeEntry="used" isCounter="false" />
+                <metric name="Code Cache"       type="MemoryPool" attribute="Usage"   compositeEntry="max"  isCounter="false" />
+                <metric name="PS Eden Space"       type="MemoryPool" attribute="Usage"   compositeEntry="used" isCounter="false" />
+                <metric name="PS Eden Space"       type="MemoryPool" attribute="Usage"   compositeEntry="max"  isCounter="false" />
+                <metric name="PS Old Gen"          type="MemoryPool" attribute="Usage"   compositeEntry="used" isCounter="false" />
+                <metric name="PS Old Gen"          type="MemoryPool" attribute="Usage"   compositeEntry="max"  isCounter="false" />
+                <metric name="PS Perm Gen"         type="MemoryPool" attribute="Usage"   compositeEntry="used" isCounter="false" />
+                <metric name="PS Perm Gen"         type="MemoryPool" attribute="Usage"   compositeEntry="max"  isCounter="false" />
+                <metric name="PS Survivor Space"   type="MemoryPool" attribute="Usage"   compositeEntry="used" isCounter="false" />
+                <metric name="PS Survivor Space"   type="MemoryPool" attribute="Usage"   compositeEntry="max"  isCounter="false" />                    
+            </include>
+        </publish>
+        
+        <publish name="Tomcat:type=*,*">
+            <delay>30</delay>
+            <unit>SECONDS</unit>
+            <include>
+                <!-- apr -->
+                <metric name="&quot;http-apr-8080&quot;" attribute="currentThreadCount"  />
+                <metric name="&quot;http-apr-8080&quot;" attribute="currentThreadsBusy"  />
+                <metric name="&quot;http-apr-8080&quot;" attribute="connectionCount"  />
+                <!-- Native (nio) -->
+                <metric name="&quot;http-nio-8080&quot;" attribute="currentThreadCount"  />
+                <metric name="&quot;http-nio-8080&quot;" attribute="currentThreadsBusy"  />
+                <metric name="&quot;http-nio-8080&quot;" attribute="connectionCount"  />
+			</include>
+        </publish>
+
+
+        <publish name="com.expedia.www.platform.monitoring.jmx:type=OperatingSystem">
+            <delay>30</delay>
+            <unit>SECONDS</unit>
+            <include>
+                <metric attribute="ProcessCpuUsage" isCounter="false" type="OperatingSystem"/>
+            </include>
+        </publish>
+    </publishList>
+</monitor>

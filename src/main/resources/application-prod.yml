@@ -1,0 +1,8 @@
+# Logging & Tomcat
+server:
+  tomcat:
+    max-threads: 20
+
+# Additional Config
+test:
+  helloMsg: "Hello dear customer"

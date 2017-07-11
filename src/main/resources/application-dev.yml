@@ -1,0 +1,13 @@
+---
+# Monitoring
+monitoringAgent:
+  statsd:
+    hostname: "10.0.16.40"
+
+# Spring Actuator Endpoints
+endpoints:
+  enabled: true
+
+# Additional Config
+test:
+  helloMsg: "Hello dev"

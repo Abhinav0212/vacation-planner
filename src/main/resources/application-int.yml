@@ -1,0 +1,9 @@
+---
+# Logging & Tomcat
+server:
+  tomcat:
+    max-threads: 10
+
+# Additional Config
+test:
+  helloMsg: "Hello internal user"

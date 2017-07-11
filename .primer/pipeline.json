@@ -1,0 +1,145 @@
+{
+  "name": "vacation-planner",
+  "team": "EWE Packages",
+  "owner": "amahalingam",
+  "appName": "vacation-planner",
+  "description": null,
+  "disabled": false,
+  "steps": [
+    {
+      "name": "Build_vacation-planner",
+      "actionId": "vacation-planner-master",
+      "params": {
+        "token": "masterBuild"
+      },
+      "action": {
+        "name": "primerBuildsJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": [
+        "DeployTest_vacation-planner",
+        "Fortify-Scan"
+      ]
+    },
+    {
+      "name": "DeployTest_vacation-planner",
+      "actionId": "ewetest_deploy-docker-ecs",
+      "params": {
+        "jobParameters": {
+          "ROLE_NAME": "vacation-planner",
+          "PERFORM_RELEASE": "false"
+        },
+        "token": "ewetestEcsDeploy"
+      },
+      "action": {
+        "name": "ewedeployJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": [
+        "ReleaseTest_vacation-planner"
+      ]
+    },
+    {
+      "name": "Fortify-Scan",
+      "actionId": "vacation-planner-fortifyScan",
+      "params": {
+        "jobParameters": {},
+        "token": "fortifyScan"
+      },
+      "action": {
+        "name": "primerBuildsJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": "Fortify Scan",
+      "ignoreResult": true,
+      "successChildren": []
+    },
+    {
+      "name": "ReleaseTest_vacation-planner",
+      "actionId": "ewetest_release-docker-ecs",
+      "params": {
+        "jobParameters": {
+          "ROLE_NAME": "vacation-planner"
+        },
+        "token": "ewetestReleaseDockerEcs"
+      },
+      "action": {
+        "name": "ewedeployJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": [
+        "Perf_vacation-planner"
+      ]
+    },
+    {
+      "name": "Perf_vacation-planner",
+      "actionId": "primer-perftest-template",
+      "params": {
+        "jobParameters": {
+          "ROLE_NAME": "vacation-planner",
+          "REGION": "us-west-2",
+          "ENVIRONMENT": "test"
+        },
+        "token": "perfPrimerAutomationToken"
+      },
+      "action": {
+        "name": "eweperfJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": [
+        "DeployProd_vacation-planner"
+      ]
+    },
+    {
+      "name": "DeployProd_vacation-planner",
+      "actionId": "eweprod-ee_deploy-docker-ecs",
+      "params": {
+        "jobParameters": {
+          "ROLE_NAME": "vacation-planner"
+        },
+        "token": "eweprodeeEcsDeploy"
+      },
+      "action": {
+        "name": "ewedeployJenkins"
+      },
+      "disabled": false,
+      "triggerType": "manual",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": [
+        "ReleaseProd_vacation-planner"
+      ]
+    },
+    {
+      "name": "ReleaseProd_vacation-planner",
+      "actionId": "eweprod-ee_release-docker-ecs",
+      "params": {
+        "jobParameters": {
+          "ROLE_NAME": "vacation-planner"
+        },
+        "token": "eweprodeeEcsRelease"
+      },
+      "action": {
+        "name": "ewedeployJenkins"
+      },
+      "disabled": false,
+      "triggerType": "automatic",
+      "description": null,
+      "ignoreResult": false,
+      "successChildren": []
+    }
+  ]
+}
