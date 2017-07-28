@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vacation Planner</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-horizon.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
+
+    <style>
+        .thumbnail{
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .thumbnail img{
+            width: 100%;
+            height: 65%;
+            display: block;
+        }
+        li{
+            cursor: move;
+        }
+        .over {
+            border: 2px dashed #000;
+         }
+        .selected {
+            border: 3px solid #5adf00;
+        }
+    </style>
+
+</head>
+<body onload="getSearchResults();">
+    <div class="panel panel-default">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
+            <a id="header-logo" data-tid="header-logo" href="/" target="_top" data-omniture-id="Header.Logo">
+                <img itemprop="image" alt="www.expedia.com" src="images/expedia_logo.jpg" style="font-size:0;" border="0" width="130" height="30">
+            </a>
+        </div>
+        <div class="panel-heading">
+            <h1 class="panel-title">Things to do in </h1>
+        </div>
+        <div class="panel-body">
+            <div class="row row-horizon" id="activies-result"></div>
+        </div>
+    </div>
+
+    <div class="container" style="width:100%;">
+        <div>
+            <ul class="nav nav-tabs"></ul>
+            <div class="tab-content"></div>
+        </div>
+    </div>
+
+    <script id="handlebars-activity-card" type="text/x-handlebars-template">
+        {{#each activities}}
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 ">
+            <div class="thumbnail" onclick="addEvent(this);" id="activity{{@index}}" data-id="{{@index}}">
+                <img src= "{{this.imageUrl}}" alt="...">
+                <div class="caption" style="height:27%;">
+                    <h5><a href="#">{{increment @index}}. {{this.title}}</a></h5>
+                </div>
+                <div>
+                    {{#if this.duration}}
+                        <span class="glyphicon glyphicon-time" style='color:sandybrown'></span> {{this.duration}}
+                    {{/if}}
+                    {{#if this.fromPrice}}
+                        <span class="glyphicon glyphicon-usd" style='color:gold'></span> {{trimString this.fromPrice}}
+                    {{/if}}
+                    {{#if this.recommendationScore}}
+                        <span class="glyphicon glyphicon-heart" style='color:orangered'></span> {{calculateRatings this.recommendationScore}} / 5
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <!-- TODO - customize the list object ( remove button, rearrange?, better style, image?)-->
+    <script id="handlebars-list-item" type="text/x-handlebars-template">
+        <li class='list-group-item' id={{this.id}} draggable="true">{{this.title}}</li>
+    </script>
+
+    <script id="handlebars-tab-head" type="text/x-handlebars-template">
+        {{#each date}}
+            {{#if isFirst}}
+            <li class="active">
+            {{else}}
+            <li>
+            {{/if}}
+            <a data-toggle="tab" href=#{{contentId}}>{{date}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- TODO - improve panel style-->
+    <script id="handlebars-tab-body" type="text/x-handlebars-template">
+        {{#each date}}
+            <div id={{contentId}} data-id={{@index}} class="tab-pane fade {{#if isFirst}}in active">{{else}}">{{/if}}
+                <ul style="width:25%;float: left; padding: 5px;" id={{listId}} class="list-group">
+                </ul>
+                <div id={{mapId}} style="width:50%;height:700px;float:left "></div>
+                <div id="{{directionsPanelId}}" style="float:right;width:25%;height:700px;padding-left: 10px; overflow: auto;"></div>
+            </div>
+        {{/each}}
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/collapse.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/handlebars-v4.0.10.js"></script>
+    <script src="js/landingPage.js"></script>
+    <script src="js/planner.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ZI9lRPl5OUt7GC7SaE0Dga7JSsYNkRY&callback=myMap"></script>
+</body>
+</html>

@@ -1,7 +1,9 @@
 About vacation-planner
 =========================
 
-This is a Spring Boot application (please add more info here)...
+This is a Spring Boot application
+
+The home page of the application is at : http://localhost:8080/landingPage.html
 
 Prerequisites
 =============
@@ -33,7 +35,7 @@ You must add the following VM options in order for logging to work properly:
 
     -Dapplication.home=. -Dproject.name=vacation-planner -Dspring.profiles.active=dev -Dapplication.environment=dev
 
-Alternately, you may use either of the following Maven targets to run the application from either the command line or 
+Alternately, you may use either of the following Maven targets to run the application from either the command line or
 your IDE:
 
     mvn spring-boot:run
@@ -42,7 +44,7 @@ or:
 
     mvn exec:exec
 
-Open a browser and visit [http://localhost:8080/](http://localhost:8080/) for Swagger documentation, or 
+Open a browser and visit [http://localhost:8080/](http://localhost:8080/) for Swagger documentation, or
 [http://localhost:8080/service/hello](http://localhost:8080/service/hello) for the sample API.
 
 
@@ -73,12 +75,12 @@ Running the Docker Image
 docker run -e "APP_NAME=vacation-planner" -e "EXPEDIA_ENVIRONMENT=dev" -e "ACTIVE_VERSION=$(git rev-parse HEAD)" -p 8080:8080 vacation-planner
 ```
 
-Open a browser and visit [http://LOCAL_DOCKER_IP:8080/](http://LOCAL_DOCKER_IP:8080/) (use, for example, 
+Open a browser and visit [http://LOCAL_DOCKER_IP:8080/](http://LOCAL_DOCKER_IP:8080/) (use, for example,
 ```docker-machine ip default``` to get the ip address).
 
 
 Spring Boot Configuration Properties
 ====================================
 
-Please see [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) 
+Please see [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
 for details.

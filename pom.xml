@@ -199,6 +199,13 @@
             <version>${platform-diagnostics.version}</version>
         </dependency>
 
+        <!-- Optional, test for static content, bootstrap CSS-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>
