@@ -23,9 +23,6 @@
             height: 65%;
             display: block;
         }
-        li{
-            cursor: move;
-        }
         .over {
             border: 2px dashed #000;
          }
@@ -83,7 +80,7 @@
 
     <!-- TODO - customize the list object ( remove button, rearrange?, better style, image?)-->
     <script id="handlebars-list-item" type="text/x-handlebars-template">
-        <li class='list-group-item' id={{this.id}} draggable="true">{{this.title}}</li>
+        <li class='list-group-item' id={{this.id}} data-id="{{dataId}}" draggable="true">{{this.title}} <span class="glyphicon glyphicon-remove" style='color:darkred; float:right; opacity: 0.6' onclick="deleteItem(this);"></span> </li>
     </script>
 
     <script id="handlebars-tab-head" type="text/x-handlebars-template">

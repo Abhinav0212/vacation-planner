@@ -69,7 +69,6 @@ let startDate = getUrlParameter('startDate');
 let endDate = getUrlParameter('endDate');
 let response1 = {date:[]};
 let response2 = {date:[]};
-let temp = new Date(startDate);
 
 for (let d =  new Date(startDate), i=1; d <=  new Date(endDate); d.setDate(d.getDate() + 1), i++) {
     if(i===1){
@@ -102,8 +101,6 @@ function handleDragStart(e) {
     dragSrcEl = this;
 
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.innerHTML);
-    console.log(this.innerHTML);
 }
 
 function handleDragOver(e) {
@@ -117,7 +114,6 @@ function handleDragOver(e) {
 }
 
 function handleDragEnter(e) {
-    console.log(e);
     this.classList.add('over');
 }
 
@@ -129,12 +125,10 @@ function handleDrop(e) {
     if (e.stopPropagation) {
         e.stopPropagation(); // stops the browser from redirecting.
     }
-
-    // Don't do anything if dropping the same column we're dragging.
     if (dragSrcEl !== this) {
-        // Set the source column's HTML to the HTML of the column we dropped on.
-        dragSrcEl.innerHTML = this.innerHTML;
-        this.innerHTML = e.dataTransfer.getData('text/html');
+        let dragSrc = $(dragSrcEl);
+        rearrangeMarkers(dragSrc.index(),$(this).index());
+        dragSrc.insertBefore(this);
     }
     return false;
 }
@@ -153,12 +147,11 @@ function addEvent(activity) {
     let actvity_card = window.activityResponse.activities[index];
     let active_tab = $('.tab-pane.active ul');
     let list_id = active_tab[0].id + activity.id;
-    console.log(activity);
     activity.classList.add('selected');
 
     if (!($('#'+list_id).length > 0)){
 
-        let response = {id:list_id, title:actvity_card.title};
+        let response = {id:list_id, title:actvity_card.title, dataId:activity.id};
 
         let template = $('#handlebars-list-item').html();
         let templateScript = Handlebars.compile(template);
@@ -180,6 +173,14 @@ function addEvent(activity) {
     }
 }
 
+function deleteItem(deleteButton){
+    let item = $(deleteButton).parent();
+    removeMarker(item.index());
+    let activityItem = document.getElementById(item.data('id'));
+    activityItem.classList.remove('selected');
+    item.remove();
+}
+
 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
     let map_id = $('.tab-pane.active').data('id');
     let center=display_maps[map_id].getCenter();
@@ -195,7 +196,6 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 function myMap() {
     let cityName = getUrlParameter('location');
     let geocoder = new google.maps.Geocoder();
-    let center ;
 
     let mapProp = {
         zoom:13,
@@ -252,36 +252,67 @@ function addMarker(coords,title) {
         infowindow.open(display_maps[map_id], marker);
     });
     allMarkers[map_id].push(marker);
-    if(allMarkers[map_id].length > 1){
+
+    calcRoute(map_id);
+}
+
+function removeMarker(markerId){
+    let map_id = $('.tab-pane.active').data('id');
+    let markerArray = allMarkers[map_id];
+    if(markerArray[markerId]){
+        markerArray[markerId].setMap(null);
+        markerArray.splice(markerId,1);
+
         calcRoute(map_id);
     }
 }
 
+function rearrangeMarkers(markerIdSrc, markerIdDest){
+    let map_id = $('.tab-pane.active').data('id');
+    let markerArray = allMarkers[map_id];
+    let currentSelection = markerArray[markerIdSrc];
+    if(currentSelection){
+        markerArray.splice(markerIdSrc,1);
+        markerArray.splice(markerIdDest,0,currentSelection);
+
+        calcRoute(map_id);
+    }
+}
 /* display the route for the activities currently selected */
 // TODO - display path better
 function calcRoute(map_id) {
-    let directionsService = new google.maps.DirectionsService();
-    let len = allMarkers[map_id].length;
-    let waypoints = [];
-    for(let i = 1; i < len-1; i++) {
-        waypoints.push({
-            location: allMarkers[map_id][i].position,
-            stopover: true
-        })
+    if(allMarkers[map_id].length > 1) {
+        if(!directionsDisplays[map_id].map){
+            directionsDisplays[map_id].setMap(display_maps[map_id]);
+        }
+        let directionsService = new google.maps.DirectionsService();
+        let len = allMarkers[map_id].length;
+        let waypoints = [];
+        for (let i = 1; i < len - 1; i++) {
+            waypoints.push({
+                location: allMarkers[map_id][i].position,
+                stopover: true
+            })
+        }
+        let request = {
+            origin: allMarkers[map_id][0].position,
+            destination: allMarkers[map_id][len - 1].position,
+            travelMode: 'DRIVING',
+            waypoints: waypoints,
+            optimizeWaypoints: true
+        };
+        directionsService.route(request, function (response, status) {
+            if (status === 'OK') {
+                directionsDisplays[map_id].setDirections(response);
+            }
+            else {
+                alert('Directions request failed due to ' + status);
+            }
+        });
     }
-    let request = {
-        origin: allMarkers[map_id][0].position,
-        destination: allMarkers[map_id][len-1].position,
-        travelMode: 'DRIVING',
-        waypoints: waypoints,
-        optimizeWaypoints: true
-    };
-    directionsService.route(request, function(response, status) {
-        if (status === 'OK') {
-            directionsDisplays[map_id].setDirections(response);
+    else{
+        if(directionsDisplays[map_id].map) {
+            directionsDisplays[map_id].setMap(null);
         }
-        else {
-            alert('Directions request failed due to ' + status);
-        }
-    });
+    }
 }
