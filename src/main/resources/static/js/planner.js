@@ -6,7 +6,8 @@
 
 function getSearchResults () {
     let cityName = getUrlParameter('location');
-    $('.panel-title').append(cityName);
+    $('#panel-title').append(cityName);
+    document.getElementById("city-input").value = cityName;
     $.ajax({
         type: 'GET',
         url: "https://www.expedia.com/lx/api/search",
@@ -16,6 +17,7 @@ function getSearchResults () {
         },
         success: function (response) {
             populateCards(response);
+            // createFilterPane(response);
             window.activityResponse = response;
         },
         error: function (e) {
@@ -57,9 +59,9 @@ Handlebars.registerHelper('calculateRatings', function(value) {
 function populateCards (response) {
     let template = $('#handlebars-activity-card').html();
     let templateScript = Handlebars.compile(template);
-    response.activities = response.activities.slice(0, 15);
-    let html = templateScript(response);
+    let html = templateScript(response.activities.slice(0, 15));
     $('#activies-result').append(html);
+
 }
 
 
@@ -67,6 +69,14 @@ function populateCards (response) {
 
 let startDate = getUrlParameter('startDate');
 let endDate = getUrlParameter('endDate');
+if(!startDate || !endDate){
+    startDate = new Date().toLocaleDateString();
+    endDate = new Date();
+    endDate.setDate(endDate.getDate() + 1);
+    endDate = endDate.toLocaleDateString();
+}
+document.getElementById("start-date").value = startDate;
+document.getElementById("end-date").value = endDate;
 let response1 = {date:[]};
 let response2 = {date:[]};
 
@@ -90,6 +100,34 @@ template = $('#handlebars-tab-body').html();
 templateScript = Handlebars.compile(template);
 html = templateScript(response2);
 $('.tab-content').append(html);
+
+// -------------------Display Filter pane--------------------
+
+function createFilterPane (response) {
+    let filterOptions = {};
+    for(let i=0; i<response.activities.length;i++){
+        let activity = response.activities[i];
+        for(let j=0; j<activity.categories.length;j++){
+            let category = activity.categories[j];
+            if(category in filterOptions){
+                filterOptions[category]++;
+            }
+            else{
+                filterOptions[category]=1;
+            }
+        }
+    }
+    let keys = Object.keys(filterOptions);
+    let filterOptionsArr = [];
+    for(let i=0;i<keys.length;i++){
+        let key = keys[i];
+        filterOptionsArr.push({catName:key,count:filterOptions[key]});
+    }
+    let template = $('#handlebars-filter-list').html();
+    let templateScript = Handlebars.compile(template);
+    let html = templateScript(filterOptionsArr);
+    $('#filters').append(html);
+}
 
 // -------------------List item functions-----------------------
 
@@ -203,6 +241,11 @@ function myMap() {
 
     let startDate = getUrlParameter('startDate');
     let endDate = getUrlParameter('endDate');
+    if(!startDate || !endDate){
+        startDate = new Date();
+        endDate = new Date();
+        endDate.setDate(endDate.getDate() + 1)
+    }
     window.display_maps = [];
     window.allMarkers = [];
     window.directionsDisplays =[];

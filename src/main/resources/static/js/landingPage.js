@@ -37,12 +37,15 @@ $(document).on('click', '.btn', function() {
     let startDate = $("#start-date").val();
     let endDate = $("#end-date").val();
     if (cityName) {
-        if(startDate){
+        if(startDate && endDate){
             window.location.href = '/planner.html?location='+cityName+'&startDate='+startDate+'&endDate='+endDate;
         }
         else{
             window.location.href = '/planner.html?location='+cityName;
         }
+        return false;
+    }
+    else {
         return false;
     }
 });

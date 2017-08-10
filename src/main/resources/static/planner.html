@@ -33,34 +33,67 @@
 
 </head>
 <body onload="getSearchResults();">
-    <div class="panel panel-default">
+    <!--<div style="width:10%;float:left">-->
+        <!--<div id="filters"></div>-->
+    <!--</div>-->
+    <!--<div  style="width:90%;float:right">-->
+    <div>
         <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
             <a id="header-logo" data-tid="header-logo" href="/" target="_top" data-omniture-id="Header.Logo">
                 <img itemprop="image" alt="www.expedia.com" src="images/expedia_logo.jpg" style="font-size:0;" border="0" width="130" height="30">
             </a>
         </div>
-        <div class="panel-heading">
-            <h1 class="panel-title">Things to do in </h1>
-        </div>
-        <div class="panel-body">
-            <div class="row row-horizon" id="activies-result"></div>
-        </div>
-    </div>
 
-    <div class="container" style="width:100%;">
-        <div>
-            <ul class="nav nav-tabs"></ul>
-            <div class="tab-content"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 id="panel-title">Things to do in </h3>
+                <form class="form-inline">
+                    <strong> Modify Search : </strong>
+                    <div class="form-group">
+                        <label for="city-input" class="col-2 col-form-label">Destination</label>
+                        <input class="form-control" type="text" placeholder="City" id="city-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="datetimepicker6" class="col-2 col-form-label">From</label>
+                        <div class='input-group date' id='datetimepicker6'>
+                            <input type='text' class="form-control" id="start-date"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="datetimepicker7" class="col-2 col-form-label">To</label>
+                        <div class='input-group date' id='datetimepicker7'>
+                            <input type='text' class="form-control" id="end-date">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" id="search" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+            <div class="panel-body">
+                <div class="row row-horizon" id="activies-result"></div>
+            </div>
+        </div>
+
+        <div class="container" style="width:auto;">
+            <div>
+                <ul class="nav nav-tabs"></ul>
+                <div class="tab-content"></div>
+            </div>
         </div>
     </div>
 
     <script id="handlebars-activity-card" type="text/x-handlebars-template">
-        {{#each activities}}
+        {{#each this}}
         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 ">
             <div class="thumbnail" onclick="addEvent(this);" id="activity{{@index}}" data-id="{{@index}}">
                 <img src= "{{this.imageUrl}}" alt="...">
                 <div class="caption" style="height:27%;">
-                    <h5><a href="#">{{increment @index}}. {{this.title}}</a></h5>
+                    <h5><a href="https://www.expedia.com/lx/activity/{{this.id}}/">{{increment @index}}. {{this.title}}</a></h5>
                 </div>
                 <div>
                     {{#if this.duration}}
@@ -78,7 +111,15 @@
         {{/each}}
     </script>
 
-    <!-- TODO - customize the list object ( remove button, rearrange?, better style, image?)-->
+    <script id="handlebars-filter-list" type="text/x-handlebars-template">
+        {{#each this}}
+        <div>
+            <input type="checkbox" value="{{this.catName}}" id="filter-category{{@index}}" />
+            <label for="filter-category{{@index}}">{{this.catName}} ({{this.count}})</label>
+        </div>
+        {{/each}}
+    </script>
+
     <script id="handlebars-list-item" type="text/x-handlebars-template">
         <li class='list-group-item' id={{this.id}} data-id="{{dataId}}" draggable="true">{{this.title}} <span class="glyphicon glyphicon-remove" style='color:darkred; float:right; opacity: 0.6' onclick="deleteItem(this);"></span> </li>
     </script>
